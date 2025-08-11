@@ -43,12 +43,16 @@ public class AccountServiceImpl implements IAccountsService {
         if(optionalCustomer.isPresent()){
             throw new CustomerAlreadyExistsException("Customer already registered with given mobileNumber " + customerDto.getMobileNumber());
         }
-        customer.setCreatedAt(LocalDateTime.now());
-        customer.setCreatedBy("Anonymous");
         Customer savedCustomer =  customerRepository.save(customer);
         accountsRepository.save(createNewAccount(savedCustomer));
     }
 
+    /**
+     * Creates a new bank account for the given customer with a randomly generated account number.
+     *
+     * @param customer The customer for whom to create the account
+     * @return The newly created Accounts entity with default values
+     */
     private Accounts createNewAccount(Customer customer) {
         Accounts newAccount = new Accounts();
         newAccount.setCustomerId(customer.getCustomerId());
@@ -57,11 +61,16 @@ public class AccountServiceImpl implements IAccountsService {
         newAccount.setAccountNumber(randomAccountNumber);
         newAccount.setAccountType(AccountsConstants.SAVINGS);
         newAccount.setBranchAddress(AccountsConstants.ADDRESS);
-        newAccount.setCreatedBy("Anonymous");
-        customer.setCreatedAt(LocalDateTime.now());
         return newAccount;
     }
 
+    /**
+     * Fetches account details for a customer using their mobile number.
+     *
+     * @param mobileNumber The mobile number of the customer whose account details to fetch
+     * @return CustomerDto containing the customer and account details
+     * @throws ResourceNotFoundException if no customer is found with the given mobile number
+     */
     @Override
     public CustomerDto fetchAccount(String mobileNumber) {
         Customer customer = customerRepository.findByMobileNumber(mobileNumber)
@@ -73,5 +82,54 @@ public class AccountServiceImpl implements IAccountsService {
         CustomerDto customerDto = CustomerMapper.mapToCustomerDto(customer , new CustomerDto());
         customerDto.setAccountsDto(AccountsMapper.mapToAccountsDto(account, new AccountsDto()));
         return null;
+    }
+
+    /**
+     * Updates an existing customer's account information.
+     *
+     * @param customerDto The CustomerDto containing the updated customer and account information
+     * @return boolean indicating whether the update was successful
+     * @throws ResourceNotFoundException if the account or customer is not found
+     */
+    @Override
+    public boolean updateAccount(CustomerDto customerDto) {
+        boolean isUpdated = false;
+        AccountsDto accountsDto = customerDto.getAccountsDto();
+        if (accountsDto != null) {
+            Accounts accounts = accountsRepository.findById(accountsDto.getAccountNumber())
+                    .orElseThrow(() -> new ResourceNotFoundException("Account", "accountNumber", accountsDto.getAccountNumber().toString()));
+
+            AccountsMapper.mapToAccounts(accountsDto, accounts);
+            accountsRepository.save(accounts);
+
+            Long customerId = accounts.getCustomerId();
+            Customer customer = customerRepository.findById(customerId)
+                    .orElseThrow(() -> new ResourceNotFoundException("Customer", "customerId", customerId.toString()));
+
+            CustomerMapper.mapToCustomer(customerDto, customer);
+            customerRepository.save(customer);
+            isUpdated = true;
+        }
+        return isUpdated;
+    }
+
+    /**
+     * Deletes a customer's account using their mobile number.
+     *
+     * @param mobileNumber The mobile number of the customer whose account should be deleted
+     * @return boolean indicating whether the deletion was successful
+     * @throws ResourceNotFoundException if no customer is found with the given mobile number
+     */
+    @Override
+    public boolean deleteAccount(String mobileNumber) {
+
+        Customer customer = customerRepository.findByMobileNumber(mobileNumber)
+                .orElseThrow(() -> new ResourceNotFoundException("Customer", "mobileNumber", mobileNumber));
+        customerRepository.delete(customer);
+
+        accountsRepository.deleteByCustomerId(customer.getCustomerId());
+        customerRepository.deleteById(customer.getCustomerId());
+
+        return true;
     }
 }
