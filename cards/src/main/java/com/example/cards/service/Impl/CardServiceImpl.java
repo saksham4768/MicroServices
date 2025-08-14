@@ -9,8 +9,6 @@ import com.example.cards.mapper.CardsMapper;
 import com.example.cards.repository.CardRepository;
 import com.example.cards.service.ICardService;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;

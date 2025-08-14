@@ -10,7 +10,7 @@ import java.util.Optional;
  * Provides the current auditor (user) for auditing purposes.
  * In this implementation, a fixed auditor value "CARDS_MS" is used.
  */
-@Component
+@Component("auditAwareImpl")
 public class AuditAwareImpl implements AuditorAware<String> {
     
     /**
