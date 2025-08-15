@@ -11,7 +11,7 @@ import lombok.*;
 @NoArgsConstructor
 public class Accounts extends BaseEntity{
     @Column(name = "customer_id")
-    private Long CustomerId;
+    private Long customerId;
 
     @Id
     @Column(name = "account_number")
