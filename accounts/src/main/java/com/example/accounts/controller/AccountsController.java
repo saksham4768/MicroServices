@@ -49,7 +49,7 @@ public class AccountsController {
             responseCode = "201",
             description = "HTTP status created"
     )
-    @PostMapping("/createAccount")
+    @PostMapping("/create")
     public ResponseEntity<ResponseDto> createAccount(@Valid @RequestBody CustomerDto customerDto) {
         accountsService.createAccount(customerDto);
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -111,7 +111,7 @@ public class AccountsController {
                     )
             )
     })
-    @PutMapping("/updateAccount")
+    @PutMapping("/update")
     public ResponseEntity<ResponseDto> updateAccount(@Valid @RequestBody CustomerDto customerDto) {
         boolean isUpdated = accountsService.updateAccount(customerDto);
         if (!isUpdated) {
@@ -153,7 +153,7 @@ public class AccountsController {
                     )
             )
     })
-    @DeleteMapping("/deleteAccount")
+    @DeleteMapping("/delete")
     public ResponseEntity<ResponseDto> deleteAccount(@RequestParam
                                                     @Pattern(regexp = "(^$|[0-9]{10})", message = "Mobile number must be 10 digits")
                                                     String mobileNumber) {

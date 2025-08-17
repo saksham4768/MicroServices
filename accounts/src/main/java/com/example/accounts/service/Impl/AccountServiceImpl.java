@@ -81,7 +81,7 @@ public class AccountServiceImpl implements IAccountsService {
 
         CustomerDto customerDto = CustomerMapper.mapToCustomerDto(customer , new CustomerDto());
         customerDto.setAccountsDto(AccountsMapper.mapToAccountsDto(account, new AccountsDto()));
-        return null;
+        return customerDto;
     }
 
     /**
