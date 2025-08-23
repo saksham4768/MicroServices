@@ -1,4 +1,4 @@
-# 🏦 Microservices-based Banking Application
+# 🏦 Microservices-based Application
 
 A self-learning project demonstrating **Spring Boot Microservices** with modern DevOps practices.
 
