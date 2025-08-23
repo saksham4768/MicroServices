@@ -1,0 +1,30 @@
+server:
+  port: 8080
+
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: ''
+  h2:
+    console:
+      enabled: true
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  config:
+    activate:
+      on-profile: "uat"
+build:
+  version: "1.0"
+accounts:
+  message: "This is the uat env accounts microservice"
+  contactDetails:
+    name: "xyzUat"
+    email: "xyzUat@gmail.com"
+  onCallSupport:
+    - (666) 555-1234
+    - (666) 555-1235

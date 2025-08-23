@@ -1,0 +1,40 @@
+services:
+  accounts:
+    image: "saksham2388/account:1.0"
+    container_name: accountsContainer
+    ports:
+      - "8080:8080"
+#      - "8081:8081" Multiple port mapping
+    deploy:
+      resources:
+        limits:
+          memory: 700m
+    networks:
+      - network1
+  loans:
+    image: "saksham2388/loans:1.0"
+    container_name: loansContainer
+    ports:
+      - "8090:8090"
+    #      - "8081:8081" Multiple port mapping
+    deploy:
+      resources:
+        limits:
+          memory: 700m
+    networks:
+      - network1
+  cards:
+    image: "saksham2388/cards:1.0"
+    container_name: cardsContainer
+    ports:
+      - "9000:9000"
+    #      - "8081:8081" Multiple port mapping
+    deploy:
+      resources:
+        limits:
+          memory: 700m
+    networks:
+      - network1
+networks:
+  network1:
+    driver: "bridge"
