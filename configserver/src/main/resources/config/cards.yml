@@ -1,29 +1,6 @@
-server:
-  port: 9000
-spring:
-  datasource:
-    url: jdbc:h2:mem:testdb
-    driverClassName: org.h2.Driver
-    username: sa
-    password: ''
-  h2: 
-    console:
-      enabled: true
-  jpa:
-    database-platform: org.hibernate.dialect.H2Dialect
-    hibernate:
-      ddl-auto: update
-    show-sql: true
-  config:
-    import:
-      - "application_uat.yml"
-      - "application_prod.yml"
-  profiles:
-    active:
-      - "uat"
 build:
   version: "3.0"
-accounts:
+cards:
   message: "This is the cards microservice"
   contactDetails:
     name: "xyz"

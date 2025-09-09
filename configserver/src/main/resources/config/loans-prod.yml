@@ -1,6 +1,6 @@
 build:
   version: "2.0"
-accounts:
+loans:
   message: "This is the prod loans microservice"
   contactDetails:
     name: "xyzProd"

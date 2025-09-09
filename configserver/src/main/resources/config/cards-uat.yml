@@ -1,6 +1,6 @@
 build:
   version: "1.0"
-accounts:
+cards:
   message: "This is the uat env cards microservice"
   contactDetails:
     name: "xyzUat"

@@ -1,6 +1,6 @@
 build:
   version: "1.0"
-accounts:
+loans:
   message: "This is the uat env loans microservice"
   contactDetails:
     name: "xyzUat"
