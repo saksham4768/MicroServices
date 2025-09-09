@@ -2,10 +2,6 @@ server:
     port: 8080
 
 spring:
-    application:
-      name: "accounts"
-    profiles:
-      active: "prod"
     datasource:
       url: jdbc:h2:mem:testdb
       driver-class-name: org.h2.Driver
@@ -20,14 +16,19 @@ spring:
         ddl-auto: update
       show-sql: true
     config:
-      import: "optional:configserver:http://localhost:8071/"
-    rabbitmq:
-      host: localhost
-      port: 5672
-      username: "guest"
-      password: "guest"
-management:
-  endpoints:
-    web:
-      exposure:
-        include: "*"
+      import:
+        - "application_uat.yml"
+        - "application_prod.yml"
+    profiles:
+      active:
+        - "uat"
+build:
+  version: "3.0"
+accounts:
+  message: "This is the accounts microservice"
+  contactDetails:
+    name: "xyz"
+    email: "xyz@gmail.com"
+  onCallSupport:
+    - (555) 555-1234
+    - (555) 555-1235

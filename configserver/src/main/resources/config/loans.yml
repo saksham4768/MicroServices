@@ -1,10 +1,9 @@
 server:
-  port: 8080
-
+  port: 8090
 spring:
   datasource:
     url: jdbc:h2:mem:testdb
-    driver-class-name: org.h2.Driver
+    driverClassName: org.h2.Driver
     username: sa
     password: ''
   h2:
@@ -16,15 +15,19 @@ spring:
       ddl-auto: update
     show-sql: true
   config:
-    activate:
-      on-profile: "uat"
+    import:
+      - "application_uat.yml"
+      - "application_prod.yml"
+    profiles:
+      active:
+        - "uat"
 build:
-  version: "1.0"
+  version: "3.0"
 accounts:
-  message: "This is the uat env accounts microservice"
+  message: "This is the loans microservice"
   contactDetails:
-    name: "xyzUat"
-    email: "xyzUat@gmail.com"
+    name: "xyz"
+    email: "xyz@gmail.com"
   onCallSupport:
-    - (666) 555-1234
-    - (666) 555-1235
+    - (999) 666-1234
+    - (999) 666-1235

@@ -1,0 +1,10 @@
+build:
+  version: "1.0"
+accounts:
+  message: "This is the uat env accounts microservice"
+  contactDetails:
+    name: "xyzUat"
+    email: "xyzUat@gmail.com"
+  onCallSupport:
+    - (666) 555-1234
+    - (666) 555-1235

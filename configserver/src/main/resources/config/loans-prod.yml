@@ -1,0 +1,10 @@
+build:
+  version: "2.0"
+accounts:
+  message: "This is the prod loans microservice"
+  contactDetails:
+    name: "xyzProd"
+    email: "xyzProd@gmail.com"
+  onCallSupport:
+    - (999) 555-1234
+    - (999) 555-9876
