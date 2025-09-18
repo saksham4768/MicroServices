@@ -2,6 +2,7 @@ package com.example.cards.controller;
 
 import com.example.cards.constants.CardConstants;
 import com.example.cards.dto.CardDto;
+import com.example.cards.dto.CardsContactInfoDto;
 import com.example.cards.dto.ErrorResponseDto;
 import com.example.cards.dto.ResponseDto;
 import com.example.cards.service.ICardService;
@@ -14,6 +15,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Pattern;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -40,6 +43,11 @@ public class CardsController {
      */
     private final ICardService iCardsService;
 
+    @Value("${build.version}")
+    private String buildVersion;
+
+    private final Environment environment;
+    private final CardsContactInfoDto cardsContactInfoDto;
     /**
      * Creates a new card for the given mobile number.
      *
@@ -235,4 +243,42 @@ public class CardsController {
         }
     }
 
+    @Operation(
+            summary = "Get build information",
+            description = "Get build information that is deployed into cards microservice"
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "HTTP status OK"
+    )
+    @GetMapping("/build-info")
+    public ResponseEntity<String> getBuildInfo(){
+        return ResponseEntity.status(HttpStatus.OK).body(buildVersion);
+    }
+
+    @Operation(
+            summary = "Get java version information",
+            description = "Get java version information that is used in cards microservice"
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "HTTP status OK"
+    )
+    @GetMapping("/java-version")
+    public ResponseEntity<String> getJavaVersion(){
+        return ResponseEntity.status(HttpStatus.OK).body(environment.getProperty("JAVA_HOME"));
+    }
+
+    @Operation(
+            summary = "Get contact related  information",
+            description = "Get contact related information of cards microservice"
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "HTTP status OK"
+    )
+    @GetMapping("/contact-info")
+    public ResponseEntity<CardsContactInfoDto> getContactInfo(){
+        return ResponseEntity.status(HttpStatus.OK).body(cardsContactInfoDto);
+    }
 }
