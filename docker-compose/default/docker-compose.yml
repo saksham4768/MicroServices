@@ -1,36 +1,54 @@
 services:
-  accountsdb:
-    image: mysql
-    container_name: accountsdb
-    ports:
-      - 3306:3306
-    environment:
-      MYSQL_DATABASE: "accountsdb"
-    extends:
-      file: common-config.yml
-      service: microservice-db-config
+#  accountsdb:
+#    image: mysql
+#    container_name: accountsdb
+#    ports:
+#      - 3306:3306
+#    environment:
+#      MYSQL_DATABASE: "accountsdb"
+#    extends:
+#      file: common-config.yml
+#      service: microservice-db-config
+#
+#  cardsdb:
+#    image: mysql
+#    container_name: cardsdb
+#    ports:
+#      - 3308:3306
+#    environment:
+#      MYSQL_DATABASE: "cardsdb"
+#    extends:
+#      file: common-config.yml
+#      service: microservice-db-config
+#
+#  loansdb:
+#    image: mysql
+#    container_name: loansdb
+#    ports:
+#      - 3307:3306
+#    environment:
+#      MYSQL_DATABASE: "loansdb"
+#    extends:
+#      file: common-config.yml
+#      service: microservice-db-config
 
-  cardsdb:
-    image: mysql
-    container_name: cardsdb
+  eurekaserver:
+    image: "saksham2388/eurekaserver:1.0"
+    container_name: eurekaserverContainer
     ports:
-      - 3308:3306
-    environment:
-      MYSQL_DATABASE: "cardsdb"
+      - "8070:8070"
+    #      - "8081:8081" Multiple port mapping
+    healthcheck:
+      test: "curl --fail --silent localhost:8070/actuator/health/readiness | grep UP || exit 1"
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
     extends:
+      service: microservice-configserver-config
       file: common-config.yml
-      service: microservice-db-config
-
-  loansdb:
-    image: mysql
-    container_name: loansdb
-    ports:
-      - 3307:3306
     environment:
-      MYSQL_DATABASE: "loansdb"
-    extends:
-      file: common-config.yml
-      service: microservice-db-config
+      SPRING_APPLICATION_NAME: "eurekaserver"
 
   configserver:
     image: "saksham2388/configserver:1.0"
@@ -39,7 +57,7 @@ services:
       - "8071:8071"
     #      - "8081:8081" Multiple port mapping
     healthcheck:
-      test:  ["CMD", "curl", "-f", "http://localhost:8071/actuator/health"]
+      test: "curl --fail --silent localhost:8071/actuator/health/readiness | grep UP || exit 1"
       interval: 10s
       timeout: 5s
       retries: 10
@@ -49,27 +67,25 @@ services:
       file: common-config.yml
 
   accounts:
-    image: "saksham2388/account:1.0"
+    image: "saksham2388/accounts:1.0"
     container_name: accountsContainer
     ports:
       - "8080:8080"
 #      - "8081:8081" Multiple port mapping
-    healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:8080/actuator/health" ]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 10s
-    depends_on:
-      configserver:
-        condition: service_healthy
-      accountsdb:
-        condition: service_healthy
+#    healthcheck:
+#      test: [ "CMD", "curl", "-f", "http://localhost:8080/actuator/health" ]
+#      interval: 10s
+#      timeout: 5s
+#      retries: 5
+#      start_period: 10s
+#    depends_on:
+#      accountsdb:
+#        condition: service_healthy
     environment:
       SPRING_APPLICATION_NAME: "accounts"
-      SPRING_DATASOURCE_URL: "jdbc:mysql://accountsdb:3306/accountsdb"
+#      SPRING_DATASOURCE_URL: "jdbc:mysql://accountsdb:3306/accountsdb"
     extends:
-      service: microservice-configserver-config
+      service: microservice-eurekaserver-config
       file: common-config.yml
 
   loans:
@@ -78,23 +94,43 @@ services:
     ports:
       - "8090:8090"
     #      - "8081:8081" Multiple port mapping
-    healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:8090/actuator/health" ]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 10s
-    depends_on:
-      configserver:
-        condition: service_healthy
-      loansdb:
-        condition: service_healthy
+#    healthcheck:
+#      test: [ "CMD", "curl", "-f", "http://localhost:8090/actuator/health" ]
+#      interval: 10s
+#      timeout: 5s
+#      retries: 5
+#      start_period: 10s
+#    depends_on:
+#      loansdb:
+#        condition: service_healthy
     environment:
       SPRING_APPLICATION_NAME: "loans"
-      SPRING_DATASOURCE_URL: "jdbc:mysql://loansdb:3306/loansdb"
+#      SPRING_DATASOURCE_URL: "jdbc:mysql://loansdb:3306/loansdb"
     extends:
-      service: microservice-configserver-config
+      service: microservice-eurekaserver-config
       file: common-config.yml
+
+#  loans1:
+#    image: "saksham2388/loans:1.0"
+#    container_name: loans1Container
+#    ports:
+#      - "8091:8090"
+#    #      - "8081:8081" Multiple port mapping
+#    #    healthcheck:
+#    #      test: [ "CMD", "curl", "-f", "http://localhost:8090/actuator/health" ]
+#    #      interval: 10s
+#    #      timeout: 5s
+#    #      retries: 5
+#    #      start_period: 10s
+#    #    depends_on:
+#    #      loansdb:
+#    #        condition: service_healthy
+#    environment:
+#      SPRING_APPLICATION_NAME: "loans"
+#    #      SPRING_DATASOURCE_URL: "jdbc:mysql://loansdb:3306/loansdb"
+#    extends:
+#      service: microservice-eurekaserver-config
+#      file: common-config.yml
 
   cards:
     image: "saksham2388/cards:1.0"
@@ -102,24 +138,21 @@ services:
     ports:
       - "9000:9000"
     #      - "8081:8081" Multiple port mapping
-    healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:9000/actuator/health" ]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 10s
-    depends_on:
-      configserver:
-        condition: service_healthy
-      cardsdb:
-        condition: service_healthy
+#    healthcheck:
+#      test: [ "CMD", "curl", "-f", "http://localhost:9000/actuator/health" ]
+#      interval: 10s
+#      timeout: 5s
+#      retries: 5
+#      start_period: 10s
+#    depends_on:
+#      cardsdb:
+#        condition: service_healthy
     environment:
       SPRING_APPLICATION_NAME: "cards"
-      SPRING_DATASOURCE_URL: "jdbc:mysql://cardsdb:3306/cardsdb"
+#      SPRING_DATASOURCE_URL: "jdbc:mysql://cardsdb:3306/cardsdb"
     extends:
-      service: microservice-configserver-config
+      service: microservice-eurekaserver-config
       file: common-config.yml
-
 networks:
   network1:
     driver: "bridge"
