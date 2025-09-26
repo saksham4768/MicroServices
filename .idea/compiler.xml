@@ -8,13 +8,14 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="eurekaserver" />
+        <module name="gatewayserver" />
         <module name="configserver" />
       </profile>
       <profile name="Annotation profile for loans" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <processorPath>
+        <processorPath useClasspath="false">
           <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/unknown/lombok-unknown.jar" />
         </processorPath>
         <module name="loans" />
@@ -33,6 +34,7 @@
       <module name="configserver" options="-parameters" />
       <module name="eurekaserver" options="-parameters" />
       <module name="eurekserver" options="-parameters" />
+      <module name="gatewayserver" options="-parameters" />
       <module name="loans" options="-parameters" />
     </option>
   </component>

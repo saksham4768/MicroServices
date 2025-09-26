@@ -58,3 +58,8 @@ info:
     name: "Cards"
     description: "Cards Microservice"
     version: "1.0.0"
+logging:
+  level:
+    com:
+      example:
+        cards: DEBUG
